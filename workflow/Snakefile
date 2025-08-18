@@ -1,0 +1,17 @@
+import pandas as pd
+
+configfile: "config/config.yaml"
+
+samples = pd.read_csv(config["sample_sheet"], sep=",").set_index("sample_name", drop=False)
+samples.index.names = ["sample_name"]
+
+include: "rules/common.smk"
+include: "rules/qc.smk"
+include: "rules/map.smk"
+
+rule all:
+  input:
+    expand("results/fastp/{sample}/{sample}.fastp.fq.gz", sample=samples["sample_name"]),
+    expand("results/minimap/{sample}/{sample}.mapped.sam", sample=samples["sample_name"]),
+    expand("results/minimap/{sample}/{sample}.mapped.fasta", sample=samples["sample_name"]),
+    expand("results/minimap/{sample}/{sample}.idxstats.tsv", sample=samples["sample_name"])

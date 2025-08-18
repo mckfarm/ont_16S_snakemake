@@ -1,0 +1,5 @@
+name: fastplong
+channels:
+  - bioconda
+dependencies:
+  - fastplong=0.3.0
