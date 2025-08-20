@@ -42,3 +42,15 @@ rule get_abundance:
         samtools index {params.bam} -o {params.index}
         samtools idxstats {params.bam} -X {params.index} > {output}
         """
+
+rule get_read_ids:
+    input:
+        "results/minimap/{sample}/{sample}.mapped.sam"
+    output:
+        "results/minimap/{sample}/{sample}.ids.bed"
+    conda:
+        "../envs/bedtools.yaml"
+    shell:
+        """
+        samtools view -b -F 4 {input} | samtools sort - | bamToBed > {output}
+        """
